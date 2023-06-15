@@ -3,30 +3,34 @@
 const form = document.querySelector("[data-form]");
 const result = document.querySelector("[data-result]");
 
-// form.addEventListener("submit", (event) => {
-//   event.preventDefault();
-//   const entries = new FormData(event.target);
-//   const { dividend, divider } = Object.fromEntries(entries);
+/* Initial Attempt WITHOUT 'Try' method 
 
-//   if (dividend=='' || divider=='') {
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const entries = new FormData(event.target);
+  const { dividend, divider } = Object.fromEntries(entries);
 
-//      result.innerText = 'Division not performed. Both values are required in inputs. Try again'
+  if (dividend=='' || divider=='') {
 
-//   } else if ( divider<0 ) {
+     result.innerText = 'Division not performed. Both values are required in inputs. Try again'
 
-//     result.innerText = 'Division not performed. Invalid number provided. Try again'
-//     console.error ('Division not performed. Invalid number provided. Try again')
+  } else if ( divider<0 ) {
 
-//   } else if ( (Number.isNaN(Number(dividend)) ) && (Number.isNaN(Number(divider))) ) {
+    result.innerText = 'Division not performed. Invalid number provided. Try again'
+    console.error ('Division not performed. Invalid number provided. Try again')
 
-//      result.innerText = 'Something critical went wrong. Please reload the page'
-//      console.error ('Something critical went wrong. Please reload the page')
+  } else if ( (Number.isNaN(Number(dividend)) ) && (Number.isNaN(Number(divider))) ) {
 
-//   } else {
+     result.innerText = 'Something critical went wrong. Please reload the page'
+     console.error ('Something critical went wrong. Please reload the page')
+
+  } else {
     
-//     result.innerText = Math.floor(dividend / divider)};
+    result.innerText = Math.floor(dividend / divider)};
 
-// });
+});
+*/
+
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -35,22 +39,22 @@ const result = document.querySelector("[data-result]");
     const entries = new FormData(event.target);
     const { dividend, divider } = Object.fromEntries(entries);
 
-    if (dividend=='' || divider=='') {
-
-     throw  'Division not performed. Both values are required in inputs. Try again'
-     result.innerText = 'Division not performed. Both values are required in inputs. Try again'
+    if (!dividend || !divider) {
+      
+     result.innerText = 'Division not performed. Both values are required in inputs. Try again' 
+     throw new error ('Division not performed. Both values are required in inputs. Try again')
 
   } 
   
-     if ( divider<0 ) {
+     if ((dividend<0) || (divider<=0)) {
 
     
     result.innerText = 'Division not performed. Invalid number provided. Try again'
-    console.error ('Division not performed. Invalid number provided. Try again')
+    throw new error ('Division not performed. Invalid number provided. Try again')
 
   } 
   
-    if ( (Number.isNaN(Number(dividend)) ) && (Number.isNaN(Number(divider))) ) {
+    if ( (Number.isNaN(Number(dividend)) ) || (Number.isNaN(Number(divider))) ) {
 
      result.innerText = 'Something critical went wrong. Please reload the page'
      console.error ('Something critical went wrong. Please reload the page')
@@ -59,9 +63,10 @@ const result = document.querySelector("[data-result]");
     
     result.innerText = Math.floor(dividend / divider);
 
-  } catch {
+  } catch(error) {
 
+    //Only result.innerText always shows this message
     result.innerText = 'Division not performed. Invalid number provided. Try again';
-    console.log(err.stack);
+    console.log(error); 
 }  
 });
