@@ -31,6 +31,11 @@ form.addEventListener("submit", (event) => {
 });
 */
 
+/**
+ * @param {number} dividend - The number being divided
+ * @param {number} [divider]  - The number dividing the dividend
+ * @param {number} result - The result of the division
+ */
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
