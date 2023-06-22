@@ -10,8 +10,8 @@ let matches = books
 
 //  ENCAPSULATION ATTEMPT
 
-let factoryPreview = () => {
-
+    const factoryPreview = (info) => {
+    const {author, id, image, title} = info
     const element = createFactoryObject('button', {
         class: 'preview',
         'data-preview': id,
