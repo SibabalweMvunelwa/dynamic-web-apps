@@ -31,6 +31,8 @@ form.addEventListener("submit", (event) => {
 });
 */
 
+// @ts-check
+
 /**
  * @param {number} dividend - The number being divided
  * @param {number} [divider]  - The number dividing the dividend
