@@ -22,7 +22,7 @@ const List = ({ podcasts }) => {
     <Container maxWidth="md">
       <h2>Podcasts</h2>
         {podcasts.map(podcast => (
-          <Card sx={{ display: 'flex' }}>
+          <Card key={podcast.id} sx={{ display: 'flex' }}>
             <CardMedia
                 component="img"
                 sx={{ width: 151 }}

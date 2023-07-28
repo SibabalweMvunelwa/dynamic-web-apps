@@ -2,21 +2,35 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import  FavoriteIcon from '@mui/icons-material/Favorite';
-import { Accordion, AccordionDetails, AccordionSummary, Card, Container, List, ListItem, ListItemText, CardContent, Typography, CardMedia, Box, CardActionArea, IconButton, Button } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Card, Container, List, ListItem, ListItemText, CardMedia, Button } from '@mui/material';
 
-const redirectHome = () => {
-        let navigate = useNavigate();
-        const handleClick = () => {
-            // Redirect the user to the "/podcast" URL
-            navigate('/')
-          };
-}
-
-const Details = () => {
+const Details = ({handleCurrentEpisode, handleCurrentSeasonTitle, handleCurrentSeasonImage}) => {
   const [podcast, setPodcast] = useState(null);
   const [params, setParams] = useState(useParams())
+
+// Redirect the user to the "/podcast" URL
+    const navigate = useNavigate();
+    const handleRedirectHome = () => {
+          navigate('/')
+          }
+
+  const handlePlay = (episode, title, image) => {
+    handleCurrentEpisode(episode);
+    handleCurrentSeasonTitle(title);
+    handleCurrentSeasonImage(image);
+    if (episode !== null && typeof episode === 'object') {
+        localStorage.setItem('currentEpisode', JSON.stringify(episode));
+      } else {
+        localStorage.setItem('currentEpisode', episode);
+      };
+    localStorage.setItem('currentSeasonTitle', title);
+    localStorage.setItem('currentSeasonImage', image)
+    localStorage.setItem('currentTime', 0);
+    console.log(localStorage)
+  }
+
   useEffect(() => {
     // Fetch data for a single podcast using the show's ID from the URL parameter
     axios.get(`https://podcast-api.netlify.app/id/${params.id}`)
@@ -31,7 +45,7 @@ const Details = () => {
   return (
     <Container maxWidth="md">
         {/* Add Home button */}
-        <Button variant="outlined" onClick={() => }> Home </Button>
+        <Button variant="outlined" onClick={() => handleRedirectHome()}> Home </Button>
         <Card>
         <CardMedia
                 component="img"
@@ -79,7 +93,7 @@ const Details = () => {
                         {season.episodes.map(episode => (
                             <ListItem sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                                 <ListItemText primary={episode.title} secondary={"Episode: " + episode.episode} />
-                                <Button variant="outlined" > Play </Button>
+                                <Button variant="outlined" onClick={() => handlePlay()}> Play </Button>
                                 <Button variant="outlined" >{ <FavoriteIcon /> } </Button>
                             </ListItem>
                         ))}
