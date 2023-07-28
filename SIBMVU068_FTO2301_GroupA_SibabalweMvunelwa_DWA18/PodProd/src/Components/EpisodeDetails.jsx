@@ -44,9 +44,11 @@ const Details = ({handleCurrentEpisode, handleCurrentSeasonTitle, handleCurrentS
 
   return (
     <Container maxWidth="md">
-        {/* Add Home button */}
+        {/* Home button */}
         <Button variant="outlined" onClick={() => handleRedirectHome()}> Home </Button>
+        
         <Card>
+
         <CardMedia
                 component="img"
                 sx={{ 
@@ -59,12 +61,14 @@ const Details = ({handleCurrentEpisode, handleCurrentSeasonTitle, handleCurrentS
                 image={ podcast.image }
                 alt="podcast image" 
             /> 
+
         <h2>{podcast.title}</h2>
         <h3>Seasons: {podcast.seasons.length}</h3>
-        {/* Add all podcast details here (description, image etc) */}
+    
         <h3>{podcast.description}</h3>
         <h3>{podcast.genres.join(", ")}</h3>
         <h3>Last update: {podcast.updated}</h3>
+        
         <div>
             {podcast.seasons.map(season => (
                 <Accordion>
@@ -72,7 +76,7 @@ const Details = ({handleCurrentEpisode, handleCurrentSeasonTitle, handleCurrentS
                         Season { season.season }
                     </AccordionSummary>
                     <AccordionDetails>
-                    {/* Add card here with image and other available details */}
+                    {/* Season card here with image and other available details */}
                     <Card>
                     {/* <CardMedia
                             component="img"
@@ -91,9 +95,9 @@ const Details = ({handleCurrentEpisode, handleCurrentSeasonTitle, handleCurrentS
                     </Card>
                     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                         {season.episodes.map(episode => (
-                            <ListItem sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                            <ListItem key={episode.id} sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                                 <ListItemText primary={episode.title} secondary={"Episode: " + episode.episode} />
-                                <Button variant="outlined" onClick={() => handlePlay()}> Play </Button>
+                                <Button variant="outlined" onClick={() => handlePlay(episode, season.title, season.image)}> Play </Button>
                                 <Button variant="outlined" >{ <FavoriteIcon /> } </Button>
                             </ListItem>
                         ))}
