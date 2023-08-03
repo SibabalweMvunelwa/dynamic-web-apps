@@ -9,6 +9,8 @@ const Player = ({currentEpisode, currentSeasonTitle, currentSeasonImage}) => {
   const [audioRef, setAudioRef] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
+  const [episodeDuration, setEpisodeDuration] = useState(null);
+  const [audioSrc, setAudioSrc] = useState("");
   const StyledFab = styled(Fab)({
     position: 'absolute',
     zIndex: 1,
@@ -20,18 +22,23 @@ const Player = ({currentEpisode, currentSeasonTitle, currentSeasonImage}) => {
 
   useEffect(() => {
     handleEpisodeChange();
+    if (audioRef) {
+      setEpisodeDuration(formatTime(audioRef.duration))
+    }
   }, [currentEpisode, audioRef])
 
 // Funtion to format the time into minutes and seconds
   const formatTime = (time) => {
-  const minutes = Math.floor(time / 60);
-  const remainingSeconds = Math.round(time % 60);
-  
-  const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-  const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : `${remainingSeconds}`;
+    if (time) {
+      const minutes = Math.floor(time / 60);
+      const remainingSeconds = Math.round(time % 60);
+      
+      const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+      const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : `${remainingSeconds}`;
 
-  return `${formattedMinutes}:${formattedSeconds}`
-  return time
+      return `${formattedMinutes}:${formattedSeconds}`
+    }
+    return '00:00'
   }
 
   useEffect(() => {
@@ -100,7 +107,7 @@ const Player = ({currentEpisode, currentSeasonTitle, currentSeasonImage}) => {
             < SkipNext/>
           </IconButton>
           <Typography>
-            { formatTime(currentTime) } / {audioRef ? formatTime(audioRef.duration) : 0}
+            { formatTime(currentTime) } / {audioRef ? formatTime(audioRef.duration) : null }
           </Typography>
             {/* Audio Player goes here */}
              {/* <div>
@@ -111,7 +118,7 @@ const Player = ({currentEpisode, currentSeasonTitle, currentSeasonImage}) => {
             <Card sx={{ mr: 2, flexGrow: 1 }}>
               <audio
                 ref={(element) => setAudioRef(element)}
-                src={currentEpisode ? currentEpisode.file : ""}
+                src={currentEpisode.file}
                 onTimeUpdate={handleTimeUpdate}
                 // onEnded={handleSaveProgress}
                 >
