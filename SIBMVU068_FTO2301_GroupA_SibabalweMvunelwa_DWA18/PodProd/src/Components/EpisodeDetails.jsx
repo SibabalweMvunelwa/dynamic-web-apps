@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import  FavoriteIcon from '@mui/icons-material/Favorite';
 import { Accordion, AccordionDetails, AccordionSummary, Card, Container, List, ListItem, ListItemText, CardMedia, Button } from '@mui/material';
+import Fuse from 'fuse.js'
 
 const Details = ({handleCurrentEpisode, handleCurrentSeasonTitle, handleCurrentSeasonImage}) => {
   const [podcast, setPodcast] = useState(null);

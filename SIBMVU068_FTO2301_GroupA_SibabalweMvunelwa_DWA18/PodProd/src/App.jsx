@@ -13,7 +13,7 @@ import Account from './Account'
 
 const App = () => {
   const [podcasts, setPodcasts] = useState([]);
-  const [currentEpisode, setCurrentEpisode] = useState(localStorage.getItem('currentEpisode') ? /*JSON.parse*/ (localStorage.getItem('currentEpisode')) : null);
+  const [currentEpisode, setCurrentEpisode] = useState(localStorage.getItem('currentEpisode') ? JSON.parse(localStorage.getItem('currentEpisode')) : null);
   const [currentSeasonTitle, setCurrentSeasonTitle] = useState(localStorage.getItem('currentSeasonTitle') ?? null);
   const [currentSeasonImage, setCurrentSeasonImage] = useState(localStorage.getItem('currentSeasonImage') ?? null);
   
