@@ -7,8 +7,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import  FavoriteIcon from '@mui/icons-material/Favorite';
 import { Accordion, AccordionDetails, AccordionSummary, Card, Container, List, ListItem, ListItemText, CardMedia, Button, IconButton } from '@mui/material';
 import { House } from '@mui/icons-material';
+import { supabase } from '../supabaseClient';
 
-const Details = ({handleCurrentEpisode, handleCurrentSeasonTitle, handleCurrentSeasonImage}) => {
+const Details = ({handleCurrentEpisode, handleCurrentSeasonTitle, handleCurrentSeasonImage, session}) => {
   const [podcast, setPodcast] = useState(null);
   const [params, setParams] = useState(useParams())
   const [isLoading, setIsLoading] = useState(false)
@@ -18,12 +19,29 @@ const Details = ({handleCurrentEpisode, handleCurrentSeasonTitle, handleCurrentS
   const handleRedirectHome = () => {
         navigate('/')
   }
+  const handleRedirectFav = () => {
+        navigate('/favourites')
+  }
   const formatDate = (date) => {
     let formatted = new Date(date);
     return formatted.toLocaleString();
   }
   
+  const handleSaveFav = async (episode, season) => {
+    // get required data - episode id + user id
+    const episodeId = podcast.id + '__' + season + '__' + episode;
+    const userId = session.user.id;
+    // send to supabase
+    const { data, error } = await supabase
+      .from('Favourites')
+      .insert({
+        episode_id: episodeId,
+        user_id: userId,
+        podcast_title: podcast.title
+      })
+      .select('*')
 
+  }
   const handlePlay = (episode, title, image) => {
     handleCurrentEpisode(episode);
     handleCurrentSeasonTitle(title);
@@ -40,7 +58,6 @@ const Details = ({handleCurrentEpisode, handleCurrentSeasonTitle, handleCurrentS
     // Fetch data for a single podcast using the show's ID from the URL parameter
     axios.get(`https://podcast-api.netlify.app/id/${params.id}`)
       .then(response => {
-        console.log(response.data)
         setIsLoading(false)
         setPodcast(response.data)
       })
@@ -60,6 +77,9 @@ const Details = ({handleCurrentEpisode, handleCurrentSeasonTitle, handleCurrentS
         <IconButton sx={{border: '1pt solid grey'}} aria-label='Home' size='large' onClick={() => handleRedirectHome()}>
           <House fontSize='large'></House>
         </IconButton>
+        <IconButton sx={{border: '1pt solid grey'}} aria-label='Favourite' size='large' onClick={() => handleRedirectFav()}>
+          <FavoriteIcon fontSize='large'></FavoriteIcon>
+        </IconButton>
         {/* <Button variant="outlined" onClick={() => handleRedirectHome()}> Home </Button> */}
 
         <Card
@@ -77,7 +97,7 @@ const Details = ({handleCurrentEpisode, handleCurrentSeasonTitle, handleCurrentS
           <h3>Seasons: {podcast.seasons.length}</h3>
       
           <h3>{podcast.description}</h3>
-          <h3>{podcast.hasOwnProperty('genres') && podcast.genres.length > 0 ? podcast.genres.join(", ") : 'No Genres'}</h3>
+          <h3>Genres: {podcast.hasOwnProperty('genres') && podcast.genres.length > 0 ? podcast.genres.join(", ") : 'No Genres'}</h3>
           <h3>Last update: {formatDate(podcast.updated)}</h3>
           
           <div>
@@ -105,7 +125,7 @@ const Details = ({handleCurrentEpisode, handleCurrentSeasonTitle, handleCurrentS
                               <ListItem key={episode.id} sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width:'100%'}}>
                                   <ListItemText primary={episode.title} secondary={"Episode: " + episode.episode} />
                                   <Button variant="outlined" onClick={() => handlePlay(episode, season.title, season.image)}> Play </Button>
-                                  <Button variant="outlined" >{ <FavoriteIcon /> } </Button>
+                                  <Button variant="outlined" onClick={() => handleSaveFav(episode.episode, season.season)}>{ <FavoriteIcon /> } </Button>
                               </ListItem>
                           ))}
                       </List>

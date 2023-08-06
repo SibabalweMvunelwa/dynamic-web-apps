@@ -1,22 +1,64 @@
 /* eslint-disable */
 
 import { ArrowForwardIos } from '@mui/icons-material';
-import { Card, Container, CardContent, Typography, CardMedia, Box, CardActionArea, IconButton } from '@mui/material';
-import React from 'react';
+import { Card, Container, CardContent, Typography, CardMedia, Box, CardActionArea, IconButton, TextField, FormControl, InputLabel, Select, MenuItem, Chip } from '@mui/material';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Fuse from 'fuse.js';
+import  FavoriteIcon from '@mui/icons-material/Favorite';
 
 const List = ({ podcasts, setPodcasts }) => {
     const [titleFilter, setTitleFilter] = useState('');
     const [titleSort, setTitleSort] = useState('');
     const [dateSort, setDateSort] = useState('');
     const [allPodcasts, setAllPodcasts] = useState(podcasts);
+    const genres = [
+        {
+            label:'Personal Growth',
+            value: 1
+        },
+        {
+            label:'True Crime and Investigative Journalism',
+            value: 2
+        },
+        {
+            label:'History',
+            value: 3
+        },
+        {
+            label:'Comedy',
+            value: 4
+        },
+        {
+            label:'Entertainment',
+            value: 5
+        },
+        {
+            label:'Business',
+            value: 6
+        },
+        {
+            label:'Fiction',
+            value: 7
+        },
+        {
+            label:'News',
+            value: 8
+        },
+        {
+            label:'Kids and Family',
+            value: 9
+        }
+    ];
     
     let navigate = useNavigate();
     const handleClick = (id) => {
         // Redirect the user to the "/podcast" URL
         navigate('/podcast/'+id)
     };
+    const handleRedirectFav = () => {
+        navigate('/favourites')
+  }
     const fuseOptions = {
         isCaseSensitive: false,
             minMatchCharLength: 1,
@@ -24,6 +66,10 @@ const List = ({ podcasts, setPodcasts }) => {
             "title",
         ]
     };
+
+    const handleGenreSelect = (value) => {
+
+    }
 
     const handleFuzzySearch = (event) => {
         setTitleFilter(event.target.value);
@@ -77,6 +123,9 @@ const List = ({ podcasts, setPodcasts }) => {
     Made handleClick a function
     */
     <Container maxWidth="md">
+        <IconButton sx={{border: '1pt solid grey'}} aria-label='Favourite' size='large' onClick={() => handleRedirectFav()}>
+        <FavoriteIcon fontSize='large'></FavoriteIcon>
+        </IconButton>
       <h2>Podcasts</h2>
       {/* Filters */}
       <Card sx={{ display: 'flex', flexDirection: 'row', width:'100%'}}>

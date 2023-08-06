@@ -11,6 +11,7 @@ import { supabase } from './supabaseClient'
 import Auth from './Auth'
 import Account from './Account'
 import { LinearProgress, Container, Box, CircularProgress } from '@mui/material';
+import Favourites from './Components/Favourites';
 
 const App = () => {
 
@@ -83,34 +84,41 @@ const App = () => {
         <LinearProgress />
       </div>
     )
-  } else {
-    return (
-      <div>
-        {/* Supabase
-        <div className="container" style={{ padding: '50px 0 100px 0' }}>
-        {!session ? <Auth /> : <Account key={session.user.id} session={session} />} */}
-      {/* </div> */}
-      <BrowserRouter>
-        <Routes>
-          <Route exact path="/" element={<List podcasts={podcasts} setPodcasts={setPodcasts}></List>} />
-          <Route path="/podcast/:id" 
-                element={
-                          <Details handleCurrentEpisode={handleCurrentEpisode} 
-                                  handleCurrentSeasonTitle={handleCurrentSeasonTitle}
-                                  handleCurrentSeasonImage={handleCurrentSeasonImage}
-                                  >
-                          </Details>
-                          } />
-        </Routes>
-      </BrowserRouter>
-      {/* // Podcast Player goes here, as it needs to persist regardless of route */}
-      <Player currentEpisode={currentEpisode}
-              currentSeasonTitle={currentSeasonTitle}
-              currentSeasonImage={currentSeasonImage}>
-      </Player>
-      </div>
-    );
   }
+
+  if (!isLoading && !session) {
+    return (
+      <div className="container" style={{ padding: '50px 0 100px 0' }}>
+      <Auth />
+      </div>
+    )
+  }
+
+  return (
+    <div>
+    <Account key={session.user.id} session={session} />
+    <BrowserRouter>
+      <Routes>
+        <Route exact path="/" element={<List podcasts={podcasts} setPodcasts={setPodcasts}></List>} />
+        <Route path="/podcast/:id" 
+              element={
+                        <Details handleCurrentEpisode={handleCurrentEpisode} 
+                                handleCurrentSeasonTitle={handleCurrentSeasonTitle}
+                                handleCurrentSeasonImage={handleCurrentSeasonImage}
+                                session={session}
+                                >
+                        </Details>
+                        } />
+        <Route exact path="/favourites" element={<Favourites session={session} podcasts={podcasts}></Favourites>}/>
+      </Routes>
+    </BrowserRouter>
+    {/* // Podcast Player goes here, as it needs to persist regardless of route */}
+    <Player currentEpisode={currentEpisode}
+            currentSeasonTitle={currentSeasonTitle}
+            currentSeasonImage={currentSeasonImage}>
+    </Player>
+    </div>
+  );
 };
 
 
